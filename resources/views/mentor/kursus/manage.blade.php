@@ -39,16 +39,34 @@
         {{-- Welcome Card --}}
         <div class="relative overflow-hidden rounded-3xl bg-slate-900 p-8 text-white shadow-xl shadow-slate-200">
             <div class="relative z-10 md:w-2/3">
-                <h3 class="mb-2 text-xl font-bold italic text-emerald-400">Hello, Chef! 👨‍🏫</h3>
-                <h2 class="mb-4 text-3xl font-black leading-tight">Kursus "{{ $course->name }}" <br>butuh perhatianmu hari ini.</h2>
+                <h3 class="mb-2 text-xl font-bold italic text-emerald-400">Hello, Mentor! 👨‍🏫</h3>
+                <h2 class="mb-4 text-3xl font-black leading-tight">Kursus "{{ $course->name }}" <br>siap untuk dikelola.</h2>
+
                 <div class="flex flex-wrap gap-3 text-sm">
+                    {{-- Info Terakhir Update --}}
                     <div class="rounded-xl bg-white/10 px-4 py-2 backdrop-blur-md">
                         <span class="block text-[10px] uppercase opacity-60">Terakhir Update</span>
                         <span class="font-bold">{{ $course->updated_at->diffForHumans() }}</span>
                     </div>
+
+                    {{-- Info Status Kursus --}}
                     <div class="rounded-xl bg-white/10 px-4 py-2 backdrop-blur-md">
                         <span class="block text-[10px] uppercase opacity-60">Status Kursus</span>
-                        <span class="font-bold uppercase text-emerald-400">{{ $course->is_published ? 'Published' : 'Draft' }}</span>
+
+                        @php
+                            // Menentukan warna teks berdasarkan status untuk di dalam banner gelap
+                            $statusBannerColors = [
+                                'open' => 'text-emerald-400',
+                                'draft' => 'text-amber-400',
+                                'closed' => 'text-rose-400',
+                                'archived' => 'text-slate-400',
+                            ];
+                            $statusColor = $statusBannerColors[$course->status] ?? 'text-emerald-400';
+                        @endphp
+
+                        <span class="{{ $statusColor }} font-bold uppercase">
+                            {{ $course->status }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -131,12 +149,7 @@
                                 <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" />
                             </svg>
                         </a>
-                        <button class="flex w-full items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-600 transition hover:bg-blue-500 hover:text-white">
-                            Download Laporan Nilai
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round" />
-                            </svg>
-                        </button>
+
                     </div>
                 </div>
             </div>
