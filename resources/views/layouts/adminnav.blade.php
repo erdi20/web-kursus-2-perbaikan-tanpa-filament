@@ -55,7 +55,7 @@
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="font-semibold text-red-600">
                                     {{ __('Keluar Panel') }}
                                 </x-dropdown-link>
-                            </form>profile.edit
+                            </form>
                         </x-slot>
                     </x-dropdown>
                 @endauth
