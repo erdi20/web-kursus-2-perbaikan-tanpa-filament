@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminHomeController;
+use App\Http\Controllers\Admin\FaqAdminController;
+use App\Http\Controllers\Admin\SettingAdminController;
+use App\Http\Controllers\Admin\SliderAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
+use App\Http\Controllers\Admin\WithdrawalAdminController;
 use App\Http\Controllers\Mentor\AbsensiMentorController;
 use App\Http\Controllers\Mentor\EssayMentorController;
 use App\Http\Controllers\Mentor\HomeMentorController;
@@ -127,4 +133,38 @@ Route::middleware(['auth', 'mentor'])->prefix('mentor')->name('mentor.')->group(
     Route::delete('mentor/profile', [ProfileController::class, 'destroy'])->name('mentordestroy');
 });
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminHomeController::class, 'index'])->name('dashboard');
+    // slider
+    Route::get('/slider', [SliderAdminController::class, 'index'])->name('slider');
+    Route::get('/slider/create', [SliderAdminController::class, 'create'])->name('slider.create');
+    Route::post('/slider', [SliderAdminController::class, 'store'])->name('slider.store');
+    Route::get('/slider/{slider}/edit', [SliderAdminController::class, 'edit'])->name('slider.edit');
+    Route::put('/slider/{slider}', [SliderAdminController::class, 'update'])->name('slider.update');
+    Route::delete('/slider/{slider}', [SliderAdminController::class, 'destroy'])->name('slider.destroy');
+    Route::patch('/slider/{slider}/toggle-status', [SliderAdminController::class, 'toggleStatus'])->name('slider.toggle');
+
+    // faq
+    Route::get('/faq', [FaqAdminController::class, 'index'])->name('faq');
+    Route::get('/faq/create', [FaqAdminController::class, 'create'])->name('faq.create');
+    Route::post('/faq', [FaqAdminController::class, 'store'])->name('faq.store');
+    Route::get('/faq/{faq}/edit', [FaqAdminController::class, 'edit'])->name('faq.edit');
+    Route::put('/faq/{faq}', [FaqAdminController::class, 'update'])->name('faq.update');
+    Route::delete('/faq/{faq}', [FaqAdminController::class, 'destroy'])->name('faq.destroy');
+    Route::patch('/faq/{faq}/toggle', [FaqAdminController::class, 'toggle'])->name('faq.toggle');
+
+    // setting
+    Route::get('/settings', [SettingAdminController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [SettingAdminController::class, 'update'])->name('settings.update');
+
+    //
+    Route::get('/withdrawals', [WithdrawalAdminController::class, 'index'])->name('withdrawal.index');
+    Route::patch('/withdrawals/{withdrawal}/process', [WithdrawalAdminController::class, 'process'])->name('withdrawal.process');
+    Route::patch('/withdrawals/{withdrawal}/complete', [WithdrawalAdminController::class, 'complete'])->name('withdrawal.complete');
+
+    // user
+    Route::resource('users', UserAdminController::class)->only([
+        'index', 'store', 'update', 'destroy'
+    ]);
+});
 require __DIR__ . '/auth.php';

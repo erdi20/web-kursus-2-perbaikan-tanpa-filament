@@ -175,7 +175,16 @@
             </div>
         </div>
     </div>
-
+    <style>
+        .active-btn {
+            background-color: white !important;
+            color: #10b981 !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+            --tw-ring-opacity: 1 !important;
+            ring-width: 1px !important;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>

@@ -66,14 +66,21 @@ class AuthenticatedSessionController extends Controller
         RateLimiter::clear($this->throttleKey($request));
         $request->session()->regenerate();
 
-        // ✨ LOGIC REDIRECT BERDASARKAN ROLE
+        // Ambil data user yang baru login
         $user = Auth::user();
 
-        if ($user->role === 'admin' || $user->role === 'mentor') {
+        // Logika Pengalihan Berdasarkan Role
+        if ($user->role === 'admin') {
+            // Arahkan ke rute dashboard admin yang akan kamu buat nanti
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        if ($user->role === 'mentor') {
+            // Arahkan ke rute dashboard mentor
             return redirect()->intended(route('mentor.dashboardmentor'));
         }
 
-        // Default untuk Student
+        // Default untuk Student / User biasa
         return redirect()->intended(route('dashboard'));
     }
 

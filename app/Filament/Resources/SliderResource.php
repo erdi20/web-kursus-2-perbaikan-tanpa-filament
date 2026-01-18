@@ -49,31 +49,6 @@ class SliderResource extends Resource
         return $user->isAdmin();
     }
 
-    // public static function form(Form $form): Form
-    // {
-    //     return $form
-    //         ->schema([
-    //             Forms\Components\FileUpload::make('image')
-    //                 ->label('Foto Slider')
-    //                 ->image()
-    //                 ->directory('sliders')
-    //                 ->required(),
-    //             Forms\Components\TextInput::make('title')
-    //                 ->label('Judul (Opsional)')
-    //                 ->maxLength(255),
-    //             Forms\Components\Textarea::make('description')
-    //                 ->label('Deskripsi (Opsional)')
-    //                 ->maxLength(500),
-    //             Forms\Components\Toggle::make('is_active')
-    //                 ->label('Aktif')
-    //                 ->default(true),
-    //             Forms\Components\TextInput::make('order')
-    //                 ->label('Urutan')
-    //                 ->numeric()
-    //                 ->default(1),
-    //         ]);
-    // }
-
     public static function form(Form $form): Form
     {
         return $form

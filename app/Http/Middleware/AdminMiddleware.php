@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
 
-class MentorMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,9 @@ class MentorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Cek apakah sudah login DAN role-nya tepat 'mentor'
-        if (!Auth::check() || Auth::user()->role !== 'mentor') {
-            return redirect('/dashboard')->with('error', 'Akses khusus Mentor.');
+        // Cek apakah sudah login DAN role-nya tepat 'admin'
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/dashboard')->with('error', 'Akses terlarang! Hanya untuk Admin.');
         }
 
         return $next($request);
