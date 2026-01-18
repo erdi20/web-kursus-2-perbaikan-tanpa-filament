@@ -166,5 +166,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', UserAdminController::class)->only([
         'index', 'store', 'update', 'destroy'
     ]);
+
+    // Route Profile Admin
+    Route::get('admin/profile', [ProfileController::class, 'editAdmin'])->name('profile.edit');
+    Route::patch('admin/profile', [ProfileController::class, 'updateAdmin'])->name('profile.update');
 });
 require __DIR__ . '/auth.php';

@@ -15,7 +15,7 @@
             </div>
 
             {{-- 4 Card Utama --}}
-            <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
+            <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {{-- Revenue --}}
                 <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="mb-4 flex items-center gap-3">
@@ -32,7 +32,7 @@
                 {{-- Students --}}
                 <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="mb-4 flex items-center gap-3">
-                        <div class="rounded-lg bg-emerald-50 p-2 text-[#20C896]">
+                        <div class="rounded-lg bg-blue-50 p-2 text-blue-600">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
@@ -42,17 +42,17 @@
                     <h4 class="text-2xl font-black text-slate-800">{{ number_format($stats['total_students']) }}</h4>
                 </div>
 
-                {{-- Course Status --}}
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                {{-- Mentor Platform (Gabung Sini) --}}
+                <div class="group cursor-pointer rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-[#20C896]" onclick="window.location='{{ route('admin.users.index') }}'">
                     <div class="mb-4 flex items-center gap-3">
-                        <div class="rounded-lg bg-amber-50 p-2 text-amber-600">
+                        <div class="rounded-lg bg-purple-50 p-2 text-purple-600 transition-colors group-hover:bg-[#20C896] group-hover:text-white">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Courses</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Mentors</span>
                     </div>
-                    <h4 class="text-2xl font-black text-slate-800">{{ $stats['total_courses'] }}</h4>
+                    <h4 class="text-2xl font-black text-slate-800">{{ $stats['total_mentors'] }}</h4>
                 </div>
 
                 {{-- Withdrawal --}}
@@ -63,7 +63,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                         </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-rose-400">Withdrawal Pending</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-rose-400">WD Pending</span>
                     </div>
                     <h4 class="text-2xl font-black text-rose-600">{{ $stats['pending_wd'] }}</h4>
                 </div>
@@ -100,54 +100,43 @@
 
 
             {{-- Transaksi Terbaru & Sidebar --}}
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                <div class="rounded-3xl border border-slate-200 bg-white p-8 lg:col-span-2">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h4 class="text-sm font-black uppercase tracking-tight text-slate-800">Transaksi Terbaru</h4>
-                        <button class="text-[10px] font-black uppercase tracking-widest text-[#20C896] hover:underline">Semua Transaksi</button>
-                    </div>
-                    <div class="overflow-x-auto text-sm">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    <th class="pb-4">Student</th>
-                                    <th class="pb-4">Kursus</th>
-                                    <th class="pb-4">Amount</th>
-                                    <th class="pb-4 text-right">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                @forelse($recentTransactions as $payment)
-                                    <tr class="font-medium">
-                                        <td class="py-4 font-bold text-slate-700">{{ $payment->user?->name ?? 'Guest' }}</td>
-                                        <td class="py-4 text-slate-500">{{ $payment->course?->name }}</td>
-                                        <td class="py-4 font-bold text-slate-700">Rp {{ number_format($payment->gross_amount, 0, ',', '.') }}</td>
-                                        <td class="py-4 text-right">
-                                            <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-black uppercase text-emerald-600">
-                                                {{ $payment->transaction_status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="py-10 text-center text-slate-400">Belum ada transaksi.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-8 lg:col-span-2">
+                <div class="mb-6 flex items-center justify-between">
+                    <h4 class="text-sm font-black uppercase tracking-tight text-slate-800">Transaksi Terbaru</h4>
                 </div>
-
-                <div class="space-y-6">
-                    <div class="relative overflow-hidden rounded-3xl bg-[#20C896] p-8 text-white">
-                        <div class="relative z-10">
-                            <h4 class="mb-1 text-xs font-black uppercase tracking-widest text-white/80">Mentor Platform</h4>
-                            <p class="mb-4 text-3xl font-black">{{$stats['total_mentors']}}</p>
-                            <button class="w-full rounded-xl bg-white py-3 text-xs font-black uppercase tracking-widest text-[#20C896]">Kelola User</button>
-                        </div>
-                    </div>
+                <div class="overflow-x-auto text-sm">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                <th class="pb-4">Student</th>
+                                <th class="pb-4">Kursus</th>
+                                <th class="pb-4">Amount</th>
+                                <th class="pb-4 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @forelse($recentTransactions as $payment)
+                                <tr class="font-medium">
+                                    <td class="py-4 font-bold text-slate-700">{{ $payment->user?->name ?? 'Guest' }}</td>
+                                    <td class="py-4 text-slate-500">{{ $payment->course?->name }}</td>
+                                    <td class="py-4 font-bold text-slate-700">Rp {{ number_format($payment->gross_amount, 0, ',', '.') }}</td>
+                                    <td class="py-4 text-right">
+                                        <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-black uppercase text-emerald-600">
+                                            {{ $payment->transaction_status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-10 text-center text-slate-400">Belum ada transaksi.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+
         </div>
     </div>
     <style>

@@ -48,14 +48,14 @@
 
                         <x-slot name="content">
                             <div class="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">System</div>
-                            <x-dropdown-link :href="'#'">{{ __('Security Settings') }}</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.profile.edit')">{{ __('Profil Admin') }}</x-dropdown-link>
                             <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="font-semibold text-red-600">
                                     {{ __('Keluar Panel') }}
                                 </x-dropdown-link>
-                            </form>
+                            </form>profile.edit
                         </x-slot>
                     </x-dropdown>
                 @endauth

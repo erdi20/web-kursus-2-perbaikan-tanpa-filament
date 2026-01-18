@@ -189,4 +189,52 @@ class ProfileController extends Controller
 
         return Redirect::route($route)->with('status', 'profile-updated');
     }
+
+    public function editAdmin(Request $request)
+    {
+        return view('profile.admin-edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function updateAdmin(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        // Validasi Dasar saja untuk Admin
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'avatar' => ['nullable', 'image', 'max:2048'],
+            'remove_avatar' => ['nullable', 'boolean'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string'],
+        ]);
+
+        // Handle Avatar
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar_url) {
+                Storage::disk('public')->delete($user->avatar_url);
+            }
+            $user->avatar_url = $request->file('avatar')->store('avatars', 'public');
+        } elseif ($request->boolean('remove_avatar') && $user->avatar_url) {
+            Storage::disk('public')->delete($user->avatar_url);
+            $user->avatar_url = null;
+        }
+
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+        ]);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('admin.profile.edit')->with('status', 'profile-updated');
+    }
 }
