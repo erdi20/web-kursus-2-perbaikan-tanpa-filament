@@ -32,88 +32,96 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
-                {{-- Tabel Transaksi Masuk --}}
-                <div class="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
-                    <div class="border-b border-slate-100 p-6">
-                        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800">Transaksi Masuk</h3>
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                {{-- Tabel Transaksi Masuk (Komisi dari Penjualan) --}}
+                <div class="rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-sm">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h4 class="text-sm font-black uppercase tracking-tight text-slate-800">Komisi Masuk</h4>
+                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-black uppercase text-emerald-600">Terbaru</span>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse text-left">
+                        <table class="w-full border-separate border-spacing-y-3 text-left">
                             <thead>
-                                <tr class="bg-slate-50/50">
-                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Kursus</th>
-                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Nominal</th>
-                                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Tanggal</th>
+                                <tr class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    <th class="px-4 pb-2">Kursus</th>
+                                    <th class="px-4 pb-2">Nominal</th>
+                                    <th class="px-4 pb-2 text-right">Tanggal</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-50">
+                            <tbody>
                                 @forelse($transactions as $t)
-                                    <tr class="transition-colors hover:bg-slate-50/50">
-                                        <td class="px-6 py-4">
-                                            <p class="line-clamp-1 text-xs font-bold text-slate-800">{{ $t->course->name }}</p>
-                                            <p class="text-[10px] text-slate-400">{{ $t->midtrans_order_id }}</p>
+                                    <tr class="group bg-slate-50/30 transition-all hover:bg-slate-50">
+                                        <td class="rounded-l-2xl px-4 py-4">
+                                            <p class="line-clamp-1 text-xs font-bold text-slate-700">{{ $t->payment->course->name ?? 'Course Deleted' }}</p>
+                                            <p class="text-[10px] uppercase text-slate-400">{{ $t->payment->midtrans_order_id ?? '-' }}</p>
                                         </td>
-                                        <td class="px-6 py-4 text-xs font-black text-emerald-600">
-                                            +Rp {{ number_format($t->gross_amount, 0, ',', '.') }}
+                                        <td class="px-4 py-4">
+                                            {{-- GANTI mentor_earnings jadi amount sesuai controller --}}
+                                            <span class="text-xs font-black text-emerald-600">+Rp {{ number_format($t->amount, 0, ',', '.') }}</span>
                                         </td>
-                                        <td class="px-6 py-4 text-[10px] font-medium text-slate-500">
-                                            {{ \Carbon\Carbon::parse($t->settlement_at)->translatedFormat('d M Y') }}
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="px-6 py-10 text-center text-xs italic text-slate-400">Belum ada transaksi masuk.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="border-t border-slate-50 p-4 font-bold">
-                        {{ $transactions->links() }}
-                    </div>
-                </div>
-
-                {{-- Tabel Riwayat Penarikan --}}
-                <div class="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
-                    <div class="border-b border-slate-100 p-6">
-                        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800">Riwayat Penarikan</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse text-left">
-                            <thead>
-                                <tr class="bg-slate-50/50">
-                                    <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Nominal</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Bank</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                @forelse($withdrawals as $w)
-                                    <tr class="transition-colors hover:bg-slate-50/50">
-                                        <td class="px-6 py-4 text-center text-xs font-black text-slate-800">
-                                            Rp {{ number_format($w->amount, 0, ',', '.') }}
-                                        </td>
-                                        <td class="px-6 py-4 text-center">
-                                            <p class="text-[10px] font-bold uppercase text-slate-800">{{ $w->bank_name }}</p>
-                                            <p class="text-[10px] text-slate-400">{{ $w->account_number }}</p>
-                                        </td>
-                                        <td class="px-6 py-4 text-center">
-                                            <span class="{{ $w->status === 'pending' ? 'bg-amber-100 text-amber-600' : ($w->status === 'processed' ? 'bg-blue-100 text-blue-600' : ($w->status === 'completed' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600')) }} inline-block rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-wider">
-                                                {{ $w->status }}
+                                        <td class="rounded-r-2xl px-4 py-4 text-right">
+                                            <span class="text-[10px] font-bold text-slate-500">
+                                                {{ $t->payment->settlement_at ? \Carbon\Carbon::parse($t->payment->settlement_at)->translatedFormat('d M Y') : $t->created_at->format('d M Y') }}
                                             </span>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="px-6 py-10 text-center text-xs italic text-slate-400">Belum ada penarikan.</td>
+                                        <td colspan="3" class="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400">Belum ada komisi masuk.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <div class="border-t border-slate-50 p-4 font-bold">
-                        {{ $withdrawals->links() }}
+                    <div class="mt-4">
+                        {{ $transactions->appends(['w_page' => $withdrawals->currentPage()])->links() }}
+                    </div>
+                </div>
+
+                {{-- Tabel Riwayat Penarikan (Withdrawals) --}}
+                <div class="rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-sm">
+                    <div class="mb-6 flex items-center justify-between">
+                        <h4 class="text-sm font-black uppercase tracking-tight text-slate-800">Riwayat Penarikan</h4>
+                        <span class="rounded-full bg-blue-100 px-3 py-1 text-[10px] font-black uppercase text-blue-600">Status WD</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-separate border-spacing-y-3 text-left">
+                            <thead>
+                                <tr class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    <th class="px-4 pb-2">Nominal</th>
+                                    <th class="px-4 pb-2">Status</th>
+                                    <th class="px-4 pb-2 text-right">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($withdrawals as $w)
+                                    <tr class="group bg-slate-50/30 transition-all hover:bg-slate-50">
+                                        <td class="rounded-l-2xl px-4 py-4 font-bold text-slate-700">
+                                            Rp {{ number_format($w->amount, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            @if ($w->status == 'completed')
+                                                <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-600">Success</span>
+                                            @elseif($w->status == 'pending')
+                                                <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-black uppercase text-amber-600">Pending</span>
+                                            @else
+                                                <span class="rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-black uppercase text-rose-600">Rejected</span>
+                                            @endif
+                                        </td>
+                                        <td class="rounded-r-2xl px-4 py-4 text-right text-[10px] font-bold text-slate-500">
+                                            {{ $w->created_at->translatedFormat('d M Y') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="py-10 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400">Belum ada penarikan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4">
+                        {{ $withdrawals->appends(['t_page' => $transactions->currentPage()])->links() }}
                     </div>
                 </div>
             </div>

@@ -16,33 +16,49 @@
 
             {{-- 4 Card Utama --}}
             <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {{-- Revenue --}}
-                <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <div class="mb-4 flex items-center gap-3">
-                        <div class="rounded-lg bg-emerald-50 p-2 text-[#20C896]">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Revenue</span>
-                    </div>
-                    <h4 class="text-2xl font-black text-slate-800">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</h4>
-                </div>
-
-                {{-- Students --}}
+                {{-- Gross Revenue --}}
                 <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="mb-4 flex items-center gap-3">
                         <div class="rounded-lg bg-blue-50 p-2 text-blue-600">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Students</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Gross Revenue</span>
                     </div>
-                    <h4 class="text-2xl font-black text-slate-800">{{ number_format($stats['total_students']) }}</h4>
+                    <h4 class="text-2xl font-black text-slate-800">Rp {{ number_format($stats['total_gross'], 0, ',', '.') }}</h4>
+                    <p class="mt-1 text-[10px] text-slate-500">Total perputaran uang</p>
                 </div>
 
-                {{-- Mentor Platform (Gabung Sini) --}}
+                {{-- Mentor Share --}}
+                <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+                    <div class="mb-4 flex items-center gap-3">
+                        <div class="rounded-lg bg-emerald-100 p-2 text-emerald-600">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600">{{ $stats['mentor_percent'] }}% Mentor</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-emerald-700">Rp {{ number_format($stats['mentor_share'], 0, ',', '.') }}</h4>
+                    <p class="mt-1 text-[10px] text-emerald-500">Hak mentor</p>
+                </div>
+
+                {{-- Net Profit Web --}}
+                <div class="rounded-3xl border border-indigo-200 bg-indigo-50 p-6 shadow-sm">
+                    <div class="mb-4 flex items-center gap-3">
+                        <div class="rounded-lg bg-indigo-100 p-2 text-indigo-600">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600">{{ $stats['admin_percent'] }}% Web</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-indigo-700">Rp {{ number_format($stats['net_profit'], 0, ',', '.') }}</h4>
+                    <p class="mt-1 text-[10px] text-indigo-500">Keuntungan bersih</p>
+                </div>
+
+                {{-- Total Mentors (tetap) --}}
                 <div class="group cursor-pointer rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-[#20C896]" onclick="window.location='{{ route('admin.users.index') }}'">
                     <div class="mb-4 flex items-center gap-3">
                         <div class="rounded-lg bg-purple-50 p-2 text-purple-600 transition-colors group-hover:bg-[#20C896] group-hover:text-white">
@@ -53,19 +69,6 @@
                         <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Mentors</span>
                     </div>
                     <h4 class="text-2xl font-black text-slate-800">{{ $stats['total_mentors'] }}</h4>
-                </div>
-
-                {{-- Withdrawal --}}
-                <div class="rounded-3xl border border-rose-100 bg-rose-50 p-6 shadow-sm">
-                    <div class="mb-4 flex items-center gap-3">
-                        <div class="rounded-lg bg-rose-100 p-2 text-rose-600">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-rose-400">WD Pending</span>
-                    </div>
-                    <h4 class="text-2xl font-black text-rose-600">{{ $stats['pending_wd'] }}</h4>
                 </div>
             </div>
 
@@ -82,7 +85,6 @@
                         </div>
                         <p class="text-[13px] font-medium text-slate-500">Statistik transaksi masuk dari seluruh akademi</p>
                     </div>
-
                     <div class="flex items-center gap-1 rounded-[18px] bg-slate-100 p-[6px] ring-1 ring-slate-200/50">
                         @foreach (['7days' => '7 Hari', '30days' => '30 Hari', '1year' => '1 Tahun'] as $key => $label)
                             <button onclick="updateChartData('{{ $key }}', this)" id="btn-{{ $key }}" class="chart-filter-btn {{ $key == '7days' ? 'active-btn' : '' }} rounded-[12px] px-6 py-2 text-[11px] font-black uppercase tracking-[0.05em] text-slate-500 transition-all duration-300">
@@ -91,52 +93,10 @@
                         @endforeach
                     </div>
                 </div>
-
                 <div class="relative h-[350px] w-full">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
-
-
-
-            {{-- Transaksi Terbaru & Sidebar --}}
-            <div class="rounded-3xl border border-slate-200 bg-white p-8 lg:col-span-2">
-                <div class="mb-6 flex items-center justify-between">
-                    <h4 class="text-sm font-black uppercase tracking-tight text-slate-800">Transaksi Terbaru</h4>
-                </div>
-                <div class="overflow-x-auto text-sm">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                <th class="pb-4">Student</th>
-                                <th class="pb-4">Kursus</th>
-                                <th class="pb-4">Amount</th>
-                                <th class="pb-4 text-right">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            @forelse($recentTransactions as $payment)
-                                <tr class="font-medium">
-                                    <td class="py-4 font-bold text-slate-700">{{ $payment->user?->name ?? 'Guest' }}</td>
-                                    <td class="py-4 text-slate-500">{{ $payment->course?->name }}</td>
-                                    <td class="py-4 font-bold text-slate-700">Rp {{ number_format($payment->gross_amount, 0, ',', '.') }}</td>
-                                    <td class="py-4 text-right">
-                                        <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-black uppercase text-emerald-600">
-                                            {{ $payment->transaction_status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="py-10 text-center text-slate-400">Belum ada transaksi.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
         </div>
     </div>
     <style>
