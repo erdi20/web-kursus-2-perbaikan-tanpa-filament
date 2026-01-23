@@ -50,6 +50,28 @@ class QuizMentorController extends Controller
         return back()->with('success', 'Soal berhasil ditambahkan!');
     }
 
+    public function updateQuiz(Request $request, $id)
+    {
+        $quiz = QuizAssignment::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'due_date' => 'required|date',
+        ]);
+
+        $quiz->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'duration_minutes' => $request->duration_minutes,
+            'due_date' => \Carbon\Carbon::parse($request->due_date, 'Asia/Jakarta')->setTimezone('UTC'),
+            'is_published' => $request->has('is_published'),
+        ]);
+
+        return back()->with('success', 'Pengaturan Quiz berhasil diperbarui!');
+    }
+
     public function manageQuestions($id)
     {
         // Load quiz dengan relasi material.course agar bisa akses course

@@ -92,28 +92,28 @@ Route::middleware(['auth', 'mentor'])->prefix('mentor')->name('mentor.')->group(
     Route::get('/kursus/{course_id}/kelas/{class_id}/materi', [KelasMentorController::class, 'kelolaKelas'])->name('kelolakelas');
     Route::post('/kursus/{course_id}/kelas/{class_id}/materi/sync', [KelasMentorController::class, 'syncMaterials'])->name('kelasmaterisync');
     Route::delete('/kursus/{course_id}/kelas/{class_id}/materi/{material_id}', [KelasMentorController::class, 'detachMaterial'])->name('hapusmaterikelas');
-    // Cukup tulis /enrollment saja karena sudah otomatis ditambah /mentor oleh prefix group
     Route::get('/enrollment/{id}/detail', [KelasMentorController::class, 'getEnrollmentDetail'])
         ->name('enrollment.detail');
-    // Di dalam group Route::middleware(['auth', 'mentor'])
+    // kelas kelola materi
     Route::get('/kursus/{id}/kelola/materi', [MateriMentorController::class, 'index'])->name('kelolakursusmateri');
+    Route::get('/course/{course}/materi/create', [MateriMentorController::class, 'create'])->name('materi.create');
+    Route::get('/course/{course}/materi/{material}/edit', [MateriMentorController::class, 'edit'])->name('materi.edit');
     Route::post('/kursus/{id}/kelola/materi', [MateriMentorController::class, 'store'])->name('tambahmateri');
     Route::put('/kursus/{course_id}/kelola/materi/{id}', [MateriMentorController::class, 'update'])->name('updatemateri');
     Route::delete('/kursus/{course_id}/kelola/materi/{id}', [MateriMentorController::class, 'destroy'])->name('hapusmateri');
-    // Mengelola spesifik materi (Tugas & Absen)
+    // kelas materi manage
     Route::get('/materi/{material_id}/manage', [MateriMentorController::class, 'manageContent'])->name('materi.manage');
     // CRUD Essay di dalam Materi
     Route::post('/materi/{material_id}/essay', [EssayMentorController::class, 'storeEssay'])->name('materi.essay.store');
     Route::put('/essay/{id}', [EssayMentorController::class, 'updateEssay'])->name('materi.essay.update');
     Route::delete('/essay/{id}', [EssayMentorController::class, 'destroyEssay'])->name('materi.essay.destroy');
-    // List semua jawaban siswa untuk satu tugas essay tertentu
     Route::get('/essay/{essay_id}/submissions', [EssayMentorController::class, 'submissions'])->name('materi.essay.submissions');
-
-    // Memberi nilai (Grade) - Kita siapkan untuk langkah berikutnya
+    // Memberi nilai
     Route::post('/submission/{id}/grade', [EssayMentorController::class, 'gradeSubmission'])->name('materi.essay.grade');
 
     // Quiz Management
     Route::post('/quiz/store', [QuizMentorController::class, 'storeQuiz'])->name('materi.quiz.store');
+    Route::put('/quiz/{id}', [QuizMentorController::class, 'updateQuiz'])->name('materi.quiz.update');
     Route::get('/quiz/{id}/questions', [QuizMentorController::class, 'manageQuestions'])->name('materi.quiz.questions');
     Route::delete('/quiz/{id}', [QuizMentorController::class, 'destroy'])->name('hapusquiz');
     Route::post('/quiz/question/store', [QuizMentorController::class, 'storeQuestion'])->name('materi.quiz.question.store');
@@ -123,7 +123,7 @@ Route::middleware(['auth', 'mentor'])->prefix('mentor')->name('mentor.')->group(
     // absen
     Route::patch('/mentor/attendance/{id}/delete-photo', [AbsensiMentorController::class, 'deletePhoto'])
         ->name('attendance.delete-photo');
-    // leuangan
+    // keuangan
     Route::get('/mentor/laporan-keuangan', [KeuanganMentorController::class, 'index'])->name('laporan-keuangan');
     Route::post('/mentor/laporan-keuangan/withdraw', [KeuanganMentorController::class, 'storeWithdrawal'])->name('withdraw');
 

@@ -184,9 +184,11 @@
                     <h3 class="text-base font-bold text-slate-800">Status Publikasi</h3>
                     <div>
                         <select name="status" class="w-full rounded-2xl border-slate-200 py-3.5 text-sm font-bold text-slate-700 transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10">
-                            <option value="draft">Sembunyikan (Draft)</option>
-                            <option value="open">Buka Pendaftaran (Open)</option>
-                            <option value="closed">Pendaftaran Tutup (Closed)</option>
+                            @foreach (['draft' => 'DRAFT — Sembunyikan dari publik', 'open' => 'Buka — Buka pendaftaran', 'closed' => 'TUTUP — Pendaftaran ditutup', 'archived' => 'ARSIP — Sembunyikan & nonaktifkan'] as $value => $label)
+                                <option value="{{ $value }}" {{ old('status', $course->status ?? 'draft') == $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

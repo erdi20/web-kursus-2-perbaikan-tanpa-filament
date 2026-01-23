@@ -11,7 +11,7 @@
                     <span class="mx-2">/</span>
                     <span>{{ $kelas->name }}</span>
                 </nav>
-                <h2 class="text-2xl font-bold tracking-tight text-slate-950">{a{ $kelas->name }}</h2>
+                <h2 class="text-2xl font-bold tracking-tight text-slate-950">{{ $kelas->name }}</h2>
                 <p class="text-sm text-slate-500">Kelola kurikulum dan siswa dalam satu tempat.</p>
             </div>
 
@@ -76,9 +76,7 @@
             </div>
         </div>
 
-        {{-- ========================================== --}}
-        {{-- FILAMENT STYLE MODAL                       --}}
-        {{-- ========================================== --}}
+      
         <div x-show="openModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
             {{-- Backdrop --}}
             <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-[2px] transition-opacity" @click="openModal = false"></div>
@@ -343,7 +341,8 @@
                                     'text-emerald-600': data.status === 'completed',
                                     'text-amber-500': data.status === 'active',
                                     'text-rose-600': data.status === 'dropped'
-                                }" x-text="data.status === 'completed' ? 'SELESAI' : (data.status === 'dropped' ? 'KELUAR' : 'DALAM PROSES')">
+                                }"
+                                    x-text="data.status === 'completed' ? 'SELESAI' : (data.status === 'dropped' ? 'KELUAR' : 'DALAM PROSES')">
                                 </p>
                             </div>
                         </div>

@@ -15,18 +15,28 @@
                             <span class="text-xs font-medium text-slate-400">Status Kursus:</span>
 
                             @php
-                                // Map warna berdasarkan status enum
+                                // Terjemahan status ke Bahasa Indonesia
+                                $statusLabels = [
+                                    'open' => 'Terbuka',
+                                    'draft' => 'Draf',
+                                    'closed' => 'Tutup',
+                                    'archived' => 'Arsip',
+                                ];
+
+                                // Map warna berdasarkan status
                                 $statusColors = [
                                     'open' => 'bg-emerald-100 text-emerald-600',
                                     'draft' => 'bg-amber-100 text-amber-600',
                                     'closed' => 'bg-rose-100 text-rose-600',
                                     'archived' => 'bg-slate-100 text-slate-600',
                                 ];
+
+                                $label = $statusLabels[$course->status] ?? 'Tidak Diketahui';
                                 $colorClass = $statusColors[$course->status] ?? 'bg-slate-100 text-slate-600';
                             @endphp
 
                             <span class="{{ $colorClass }} rounded px-2 py-0.5 text-[10px] font-black uppercase">
-                                {{ $course->status }}
+                                {{ $label }}
                             </span>
                         </div>
                     </div>

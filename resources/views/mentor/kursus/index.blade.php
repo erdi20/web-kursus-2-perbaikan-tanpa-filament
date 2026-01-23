@@ -48,11 +48,19 @@
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
 
                             <div class="absolute left-3 top-3">
-                                @if ($course->status == 'open')
-                                    <span class="rounded-lg bg-emerald-500 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg">LIVE</span>
-                                @else
-                                    <span class="rounded-lg bg-amber-500 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg">DRAFT</span>
-                                @endif
+                                @php
+                                    $statusConfig = [
+                                        'draft' => ['label' => 'DRAFT', 'color' => 'bg-gray-500'],
+                                        'open' => ['label' => 'BUKA', 'color' => 'bg-emerald-500'],
+                                        'closed' => ['label' => 'TUTUP', 'color' => 'bg-amber-500'],
+                                        'archived' => ['label' => 'ARSIP', 'color' => 'bg-slate-500'],
+                                    ];
+                                    $config = $statusConfig[$course->status] ?? ['label' => 'UNKNOWN', 'color' => 'bg-red-500'];
+                                @endphp
+
+                                <span class="{{ $config['color'] }} rounded-lg px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg">
+                                    {{ $config['label'] }}
+                                </span>
                             </div>
                         </div>
 
@@ -61,8 +69,8 @@
                             <h3 class="text-md mb-2 line-clamp-2 font-bold text-slate-800 transition-colors group-hover:text-emerald-600">
                                 {{ $course->name }}
                             </h3>
-                            <p class="mb-4 line-clamp-2 text-xs text-slate-500">
-                                {{ $course->short_description }}
+                            <p class="prose mb-4 line-clamp-2 text-xs text-slate-500">
+                                {{ Str::words(strip_tags($course->short_description), 20, '...') }}
                             </p>
 
                             <div class="mt-auto space-y-4">

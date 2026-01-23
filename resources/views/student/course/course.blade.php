@@ -51,9 +51,9 @@
                         <h3 class="text-2xl font-black text-slate-900">Deskripsi Kursus</h3>
                         <div class="h-px flex-1 bg-slate-100"></div>
                     </div>
-                    <article class="prose prose-slate max-w-none leading-relaxed text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900">
-                        {!! $course->description !!}
-                    </article>
+                    <p class="prose mb-4 line-clamp-2 text-xs text-slate-500">
+                        {{ Str::words(strip_tags($course->short_description), 20, '...') }}
+                    </p>
                 </section>
 
                 <section>

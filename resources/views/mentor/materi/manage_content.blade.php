@@ -67,14 +67,30 @@
                             </div>
                             <div class="flex items-center gap-1">
                                 <a href="{{ route('mentor.materi.essay.submissions', $essay->id) }}" class="mr-2 text-xs font-bold text-emerald-600 transition hover:underline">Jawaban ({{ $essay->submissions->count() }})</a>
-                                <button type="button" onclick="confirmDeleteEssay('{{ route('mentor.materi.essay.destroy', $essay->id) }}')" class="p-2 text-slate-400 transition hover:text-red-500">
+
+                                <button type="button"
+                                    @click="openEditModal = true;
+                editData = {
+                    url: '{{ route('mentor.materi.essay.update', $essay->id) }}',
+                    title: '{{ addslashes($essay->title) }}',
+                    desc: '{{ addslashes($essay->description) }}',
+                    due: '{{ \Carbon\Carbon::parse($essay->due_date)->format('Y-m-d\TH:i') }}',
+                    published: {{ $essay->is_published ? 'true' : 'false' }}
+                }"
+                                    class="p-2 text-slate-400 transition hover:text-amber-500">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </button>
-                                <form action="{{ route('mentor.materi.essay.destroy', $essay->id) }}" method="POST" onsubmit="return confirm('Hapus tugas ini?')"> @csrf @method('DELETE') <button type="submit" class="p-2 text-slate-400 transition hover:text-red-500"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                <form action="{{ route('mentor.materi.essay.destroy', $essay->id) }}" method="POST" onsubmit="return confirm('Hapus tugas ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="p-2 text-slate-400 transition hover:text-red-500">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" />
-                                        </svg></button></form>
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -125,6 +141,21 @@
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('mentor.materi.quiz.questions', $quiz->id) }}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50">Kelola Soal</a>
 
+                                <button type="button"
+                                    @click="openEditQuizModal = true;
+                                        editQuizData = {
+                                            url: '{{ route('mentor.materi.quiz.update', $quiz->id) }}',
+                                            title: '{{ addslashes($quiz->title) }}',
+                                            duration: '{{ $quiz->duration_minutes }}',
+                                            due: '{{ \Carbon\Carbon::parse($quiz->due_date)->format('Y-m-d\TH:i') }}',
+                                            published: {{ $quiz->is_published ? 'true' : 'false' }}
+                                        }"
+                                    class="rounded-lg border border-slate-200 p-1.5 text-slate-400 transition hover:border-amber-100 hover:bg-amber-50 hover:text-amber-500">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+
                                 {{-- Tombol Hapus Quiz --}}
                                 <button type="button" onclick="confirmDeleteQuiz('{{ route('mentor.hapusquiz', $quiz->id) }}')" class="rounded-lg border border-slate-200 p-1.5 text-slate-400 transition hover:border-red-100 hover:bg-red-50 hover:text-red-500">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +178,7 @@
         {{-- MODAL TAMBAH QUIZ --}}
         <div x-show="openQuizModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-[2px]" x-cloak x-transition>
             <div @click.away="openQuizModal = false" class="relative w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
-                <div class="border-b border-slate-100 px-6 py-4">
+                <div class="border-b border-slate-100 bg-slate-50 px-6 py-4">
                     <h3 class="text-lg font-bold text-slate-900">Buat Quiz Baru</h3>
                 </div>
                 <form action="{{ route('mentor.materi.quiz.store') }}" method="POST" class="space-y-4 p-6">
@@ -156,6 +187,10 @@
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-slate-700">Judul Quiz</label>
                         <input type="text" name="title" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-slate-700">Deskripsi / Instruksi</label>
+                        <textarea name="description" rows="3" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-emerald-500" placeholder="Contoh: Kerjakan dengan jujur, waktu terbatas!"></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -168,13 +203,49 @@
                         </div>
                     </div>
                     <div class="flex justify-end gap-3 border-t border-slate-50 pt-4">
-                        <button type="button" @click="openQuizModal = false" class="text-sm font-bold text-slate-500">Batal</button>
-                        <button type="submit" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white">Simpan & Lanjut Buat Soal</button>
+                        <button type="button" @click="openQuizModal = false" class="text-sm font-bold text-slate-500 hover:text-slate-700">Batal</button>
+                        <button type="submit" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700">Simpan & Lanjut</button>
                     </div>
                 </form>
             </div>
         </div>
-
+        {{-- modal edit quiz --}}
+        <div x-show="openEditQuizModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-[2px]" x-cloak x-transition>
+            <div @click.away="openEditQuizModal = false" class="relative w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
+                <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+                    <h3 class="text-lg font-bold text-slate-900">Edit Pengaturan Quiz</h3>
+                </div>
+                <form :action="editQuizData.url" method="POST" class="space-y-4 p-6">
+                    @csrf @method('PUT')
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-slate-700">Judul Quiz</label>
+                        <input type="text" name="title" x-model="editQuizData.title" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-slate-700">Deskripsi / Instruksi</label>
+                        <textarea name="description" x-model="editQuizData.desc" rows="3" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">Durasi (Menit)</label>
+                            <input type="number" name="duration_minutes" x-model="editQuizData.duration" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">Batas Waktu</label>
+                            <input type="datetime-local" name="due_date" x-model="editQuizData.due" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="is_published" id="quiz_published_edit" x-model="editQuizData.published" class="rounded border-slate-300 text-blue-600">
+                        <label for="quiz_published_edit" class="text-sm font-medium text-slate-600">Publikasikan Quiz</label>
+                    </div>
+                    <div class="flex justify-end gap-3 border-t border-slate-50 pt-4">
+                        <button type="button" @click="openEditQuizModal = false" class="text-sm font-bold text-slate-500 transition hover:text-slate-700">Batal</button>
+                        <button type="submit" class="rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">Update Quiz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         {{-- MODAL TAMBAH ESSAY --}}
         <div x-show="openModal" @click.away="closeEssayModal($data)" id="essayModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-[2px]" x-cloak x-transition>
@@ -253,10 +324,140 @@
         </div>
 
         {{-- TAB ABSEN (Berdiri Sendiri) --}}
-        <div x-show="innerTab === 'absen'" class="space-y-4" x-cloak>
-            {{-- Isi tabel absen kamu tetap sama --}}
-            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                {{-- ... (isi tabel) ... --}}
+        {{-- TAB ABSEN --}}
+        <div x-show="innerTab === 'absen'" class="space-y-6" x-cloak x-transition>
+            <div class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">Rekap Presensi Mahasiswa</h3>
+                    <p class="text-sm text-slate-500">Waktu otomatis dikonversi ke **WIB**.</p>
+                </div>
+                <div class="text-right">
+                    <span class="block text-2xl font-black text-emerald-600">{{ $material->classMaterials->flatMap->attendances->count() }}</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Hadir</span>
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <table class="w-full text-left text-sm">
+                    <thead class="border-b border-slate-200 bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-4 font-bold text-slate-700">Mahasiswa</th>
+                            <th class="px-6 py-4 font-bold text-slate-700">Foto Bukti</th>
+                            <th class="px-6 py-4 font-bold text-slate-700">Kelas</th>
+                            <th class="px-6 py-4 font-bold text-slate-700">Waktu Absen (WIB)</th>
+                            <th class="px-6 py-4 text-center font-bold text-slate-700">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @php
+                            // Ambil semua attendance, konversi ke collection, urutkan terbaru
+                            $allAttendances = $material->classMaterials->flatMap->attendances->sortByDesc('created_at');
+                        @endphp
+
+                        @forelse($allAttendances as $attendance)
+                            <tr class="transition hover:bg-slate-50/50">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-9 w-9 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
+                                            @if ($attendance->student->profile_photo_path)
+                                                <img src="{{ asset('storage/' . $attendance->student->profile_photo_path) }}" class="h-full w-full object-cover">
+                                            @else
+                                                <div class="flex h-full w-full items-center justify-center font-bold text-slate-400">
+                                                    {{ strtoupper(substr($attendance->student->name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <span class="block font-bold text-slate-700">{{ $attendance->student->name }}</span>
+                                            <span class="text-[10px] text-slate-400">{{ $attendance->student->email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div x-data="{ showImg: false }" class="flex items-center gap-3">
+                                        @if ($attendance->photo_path)
+                                            {{-- Thumbnail Foto --}}
+                                            <div class="group relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-slate-200 shadow-sm">
+                                                <img @click="showImg = true" src="{{ asset('storage/' . $attendance->photo_path) }}" class="h-full w-full cursor-pointer object-cover transition duration-300 group-hover:scale-110">
+
+                                                {{-- Overlay Zoom Icon --}}
+                                                <div @click="showImg = true" class="absolute inset-0 flex cursor-pointer items-center justify-center bg-slate-900/40 opacity-0 transition-opacity group-hover:opacity-100">
+                                                    <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                            {{-- Tombol Hapus Foto Saja --}}
+                                            <button type="button" onclick="confirmDeletePhoto('{{ $attendance->id }}')" class="flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 shadow-sm transition-all hover:bg-rose-500 hover:text-white" title="Hapus file foto saja">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+
+                                            {{-- Form Tersembunyi untuk Hapus Foto --}}
+                                            <form id="delete-photo-form-{{ $attendance->id }}" action="{{ route('mentor.attendance.delete-photo', $attendance->id) }}" method="POST" class="hidden">
+                                                @csrf
+                                                @method('PATCH')
+                                            </form>
+
+                                            {{-- Lightbox Zoom --}}
+                                            <div x-show="showImg" x-transition.opacity class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/90 p-4" @click="showImg = false" x-cloak>
+                                                <div class="relative max-h-full max-w-5xl">
+                                                    <img src="{{ asset('storage/' . $attendance->photo_path) }}" class="rounded-2xl shadow-2xl">
+                                                    <button class="absolute -top-12 right-0 text-white hover:text-slate-300">
+                                                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="flex items-center gap-2 italic text-slate-400">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <span class="text-xs">Foto dihapus</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-slate-600">
+                                    {{ $attendance->classMaterial->courseClass->name ?? 'Kelas Tidak Ditemukan' }}
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-slate-700">
+                                            {{ $attendance->created_at->timezone('Asia/Jakarta')->format('H:i:s') }}
+                                        </span>
+                                        <span class="text-[11px]">
+                                            {{ $attendance->created_at->timezone('Asia/Jakarta')->translatedFormat('d F Y') }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-black uppercase tracking-tight text-emerald-700">
+                                        Hadir
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-20 text-center text-slate-400">
+                                    <div class="flex flex-col items-center">
+                                        <div class="mb-4 rounded-full bg-slate-50 p-4">
+                                            <svg class="h-10 w-10 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm font-bold text-slate-900">Belum ada aktivitas presensi</p>
+                                        <p class="text-xs">Data mahasiswa yang membuka materi akan muncul di sini.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 

@@ -54,7 +54,7 @@
 
                             {{-- Action Buttons --}}
                             <div class="flex shrink-0 gap-2 lg:flex-col">
-                                <button onclick="openEditModal({{ json_encode($q) }})" class="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-slate-400 shadow-sm transition-all hover:bg-blue-50 hover:text-blue-600">
+                                <button type="button" @click='openEditModal(@json($q))' onclick='openEditModal(@json($q))' class="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-slate-400 shadow-sm transition-all hover:bg-blue-50 hover:text-blue-600">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
@@ -207,16 +207,25 @@
 
         function openEditModal(q) {
             modalTitle.innerText = "Edit Pertanyaan";
+            // Gunakan URL yang dinamis sesuai route update soal lo
             form.action = `/mentor/quiz/question/${q.id}`;
             methodField.innerHTML = `@method('PUT')`;
 
+            // Isi field text
             document.getElementById('q_text').value = q.question_text;
             document.getElementById('q_option_a').value = q.option_a;
             document.getElementById('q_option_b').value = q.option_b;
             document.getElementById('q_option_c').value = q.option_c;
             document.getElementById('q_option_d').value = q.option_d;
-            document.getElementById('q_correct').value = q.correct_option;
             document.getElementById('q_points').value = q.points;
+
+            // Bagian Kunci Jawaban (Dropdown)
+            const correctSelect = document.getElementById('q_correct');
+            if (q.correct_option) {
+                // Kita paksa ke lowercase karena value di <option> adalah 'a', bukan 'A'
+                correctSelect.value = q.correct_option.toLowerCase();
+            }
+
             showModal();
         }
 

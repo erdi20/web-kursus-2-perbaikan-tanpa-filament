@@ -35,9 +35,14 @@ class MateriMentorController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Course $course)
     {
-        //
+        return view('mentor.materi.createmateri', compact('course'));
+    }
+
+    public function edit(Course $course, Material $material)
+    {
+        return view('mentor.materi.editmateri', compact('course', 'material'));
     }
 
     /**
@@ -92,7 +97,10 @@ class MateriMentorController extends Controller
 
         Material::create($data);
 
-        return back()->with('success', 'Materi berhasil ditambahkan!');
+        // Cari bagian return di paling bawah fungsi store
+        return redirect()
+            ->route('mentor.kelolakursusmateri', $course_id)
+            ->with('success', 'Materi berhasil ditambahkan!');
     }
 
     public function update(Request $request, $course_id, $id)
@@ -135,23 +143,34 @@ class MateriMentorController extends Controller
             'attendance_end' => $attendanceEnd,
         ];
 
+        // --- LOGIC FILE PDF  ---
         if ($request->hasFile('pdf')) {
-            if ($material->pdf) {
+            if ($material->pdf)
                 Storage::disk('public')->delete($material->pdf);
-            }
             $data['pdf'] = $request->file('pdf')->store('materials/pdf', 'public');
+        } elseif ($request->has('remove_pdf')) {
+            if ($material->pdf)
+                Storage::disk('public')->delete($material->pdf);
+            $data['pdf'] = null;
         }
 
+        // --- LOGIC FILE GAMBAR  ---
         if ($request->hasFile('image')) {
-            if ($material->image) {
+            if ($material->image)
                 Storage::disk('public')->delete($material->image);
-            }
             $data['image'] = $request->file('image')->store('materials/images', 'public');
+        } elseif ($request->has('remove_image')) {
+            if ($material->image)
+                Storage::disk('public')->delete($material->image);
+            $data['image'] = null;
         }
 
         $material->update($data);
 
-        return back()->with('success', 'Materi berhasil diperbarui!');
+        // Cari bagian return di paling bawah fungsi update
+        return redirect()
+            ->route('mentor.kelolakursusmateri', $course_id)
+            ->with('success', 'Materi berhasil diperbarui!');
     }
 
     public function destroy($course_id, $id)

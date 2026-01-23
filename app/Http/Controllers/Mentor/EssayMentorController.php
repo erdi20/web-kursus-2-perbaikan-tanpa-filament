@@ -77,22 +77,6 @@ class EssayMentorController extends Controller
         return view('mentor.materi.essay_submissions', compact('essay', 'submissions', 'course'));
     }
 
-    // public function gradeSubmission(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'score' => 'required|numeric|min:0|max:100',
-    //         'feedback' => 'nullable|string',
-    //     ]);
-
-    //     $submission = EssaySubmission::findOrFail($id);
-    //     $submission->update([
-    //         'score' => $request->score,
-    //         'feedback' => $request->feedback,
-    //         'is_graded' => true,
-    //     ]);
-
-    //     return back()->with('success', 'Nilai berhasil disimpan!');
-    // }
     public function gradeSubmission(Request $request, $id)
     {
         $request->validate([
@@ -122,9 +106,7 @@ class EssayMentorController extends Controller
                 // Update progress (centang materi selesai)
                 $enrollment->updateProgress();
 
-                // Re-calculate nilai total menggunakan service yang sudah lo buat
-                // Pakai updateEnrollmentScoreOnly sesuai request lo di Filament
-                app(GradingService::class)->updateEnrollmentScoreOnly($enrollment);
+                app(GradingService::class)->updateEnrollmentGrade($enrollment);
             }
         }
 
