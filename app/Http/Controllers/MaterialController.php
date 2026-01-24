@@ -7,6 +7,7 @@ use App\Models\CourseClass;
 use App\Models\EssaySubmission;
 use App\Models\Material;
 use App\Models\QuizSubmission;
+use App\Services\GradingService;
 use App\Services\MaterialCompletionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,11 +70,9 @@ class MaterialController extends Controller
         $completionService = app(\App\Services\MaterialCompletionService::class);
 
         // A. Tandai bahwa materi ini SUDAH DIBUKA (Mencegah bug progres langsung 100%)
+        // Tetap panggil keduanya, tapi logikanya sudah disesuaikan
         $completionService->markAsAccessed($user->id, $classId, $materialId);
-
-        // B. Cek apakah tugas-tugas di dalamnya (essay/quiz) sudah lengkap
         $completionService->checkAndMarkAsCompleted($user->id, $classId, $materialId);
-
         // C. Update persentase progres di tabel enrollments
         $enrollment->updateProgress();
 
@@ -115,7 +114,7 @@ class MaterialController extends Controller
                 }
             }
         }
-
+      
         return view('student.material.materi', compact(
             'class',
             'material',
@@ -128,7 +127,6 @@ class MaterialController extends Controller
         ));
     }
 
- 
     public function edit(string $id)
     {
         //

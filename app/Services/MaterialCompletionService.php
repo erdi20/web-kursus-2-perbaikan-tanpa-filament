@@ -19,14 +19,21 @@ class MaterialCompletionService
         $material = Material::with(['essayAssignments', 'quizAssignments'])
             ->findOrFail($materialId);
 
-        // Cek apakah semua essay sudah dikumpulkan
+        $hasTasks = $material->essayAssignments->isNotEmpty() || $material->quizAssignments->isNotEmpty();
+
+        if (!$hasTasks) {
+            // Jika tidak ada tugas, selesaikan otomatis (sudah ditangani di markAsAccessed)
+            return;
+        }
+
+        // Cek essay
         $allEssaysSubmitted = $material->essayAssignments->isEmpty() ||
             $material->essayAssignments->every(fn($essay) =>
                 EssaySubmission::where('student_id', $studentId)
                     ->where('essay_assignment_id', $essay->id)
                     ->exists());
 
-        // Cek apakah semua quiz sudah dikumpulkan
+        // Cek quiz
         $allQuizzesSubmitted = $material->quizAssignments->isEmpty() ||
             $material->quizAssignments->every(fn($quiz) =>
                 QuizSubmission::where('student_id', $studentId)
@@ -34,20 +41,7 @@ class MaterialCompletionService
                     ->exists());
 
         if ($allEssaysSubmitted && $allQuizzesSubmitted) {
-            // Dapatkan ID pivot class_material
-            $classMaterialId = ClassMaterial::where('course_class_id', $classId)
-                ->where('material_id', $materialId)
-                ->value('id');
-
-            if ($classMaterialId) {
-                MaterialCompletion::updateOrCreate(
-                    [
-                        'student_id' => $studentId,
-                        'class_material_id' => $classMaterialId,
-                    ],
-                    ['completed_at' => now()]
-                );
-            }
+            $this->markAsCompleted($studentId, $classId, $materialId);
         }
     }
 
@@ -83,14 +77,23 @@ class MaterialCompletionService
 
     public function markAsAccessed(int $studentId, int $classId, int $materialId): void
     {
+        $material = Material::findOrFail($materialId);
+        $hasTasks = $material->essayAssignments()->exists() || $material->quizAssignments()->exists();
+
+        // Hanya tandai sebagai "diakses" jika materi TIDAK punya tugas
+        if (!$hasTasks) {
+            $this->markAsCompleted($studentId, $classId, $materialId);
+        }
+    }
+
+    private function markAsCompleted(int $studentId, int $classId, int $materialId): void
+    {
         $classMaterialId = ClassMaterial::where('course_class_id', $classId)
             ->where('material_id', $materialId)
             ->value('id');
 
         if ($classMaterialId) {
-            // Gunakan updateOrCreate tapi jangan timpa completed_at jika sudah ada
-            // agar timestamp awal selesai tidak berubah-ubah
-            MaterialCompletion::firstOrCreate(
+            MaterialCompletion::updateOrCreate(
                 [
                     'student_id' => $studentId,
                     'class_material_id' => $classMaterialId,

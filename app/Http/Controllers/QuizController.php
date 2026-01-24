@@ -125,7 +125,7 @@ class QuizController extends Controller
         ])->with('success', 'Quiz berhasil dikirim!');
     }
 
-  
+
     public function result(string $classId, string $assignmentId)
     {
         $user = Auth::user();

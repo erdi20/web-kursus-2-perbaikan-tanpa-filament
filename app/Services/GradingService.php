@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Models\Attendance;
-use App\Models\ClassEnrollment;
-use App\Models\ClassMaterial;
 use App\Models\CourseClass;
-use App\Models\EssayAssignment;
-use App\Models\EssaySubmission;
+use App\Models\ClassMaterial;
 use App\Models\QuizAssignment;
 use App\Models\QuizSubmission;
+use App\Models\ClassEnrollment;
+use App\Models\EssayAssignment;
+use App\Models\EssaySubmission;
+use App\Models\MaterialCompletion;
+use Illuminate\Support\Facades\Log;
 
 class GradingService
 {
@@ -42,65 +44,49 @@ class GradingService
 
     public function canBeMarkedAsCompleted(CourseClass $class, int $studentId): bool
     {
-        // 1. Ambil semua materi di kelas ini
-        $classMaterials = ClassMaterial::where('course_class_id', $class->id)
-            ->with('material')
-            ->get();
+        // Ambil semua materi di kelas
+        $classMaterials = ClassMaterial::where('course_class_id', $class->id)->get();
 
-        // 2. Cek apakah SEMUA materi sudah selesai
         foreach ($classMaterials as $cm) {
-            $isCompleted = app(MaterialCompletionService::class)
-                ->isMaterialCompleted($studentId, $cm->id);
-
-            if (!$isCompleted) {
-                return false;  // Ada materi yang belum selesai
-            }
-        }
-
-        // 3. Ambil semua assignment
-        $materialIds = $classMaterials->pluck('material_id')->toArray();
-        $essayAssignments = EssayAssignment::whereIn('material_id', $materialIds)->get();
-        $quizAssignments = QuizAssignment::whereIn('material_id', $materialIds)->get();
-
-        // 4. Cek apakah SEMUA essay sudah dikumpulkan DAN DINILAI
-        foreach ($essayAssignments as $essay) {
-            $submission = EssaySubmission::where('student_id', $studentId)
-                ->where('essay_assignment_id', $essay->id)
-                ->first();
-
-            if (!$submission || !$submission->is_graded) {
+            // Cek apakah materi ini selesai
+            if (!$this->isMaterialFullyCompleted($studentId, $cm->id)) {
                 return false;
             }
         }
 
-        // 5. Cek apakah SEMUA quiz sudah dikumpulkan
-        foreach ($quizAssignments as $quiz) {
-            $submissionExists = QuizSubmission::where('student_id', $studentId)
-                ->where('quiz_assignment_id', $quiz->id)
-                ->exists();
+        return true;
+    }
 
-            if (!$submissionExists) {
-                return false;
-            }
+    private function isMaterialFullyCompleted(int $studentId, int $classMaterialId): bool
+    {
+        $classMaterial = ClassMaterial::with('material')->findOrFail($classMaterialId);
+        $material = $classMaterial->material;
+
+        // Jika tidak ada tugas, materi selesai saat diakses
+        $hasTasks = EssayAssignment::where('material_id', $material->id)->exists() ||
+            QuizAssignment::where('material_id', $material->id)->exists();
+
+        if (!$hasTasks) {
+            return MaterialCompletion::where('student_id', $studentId)
+                ->where('class_material_id', $classMaterialId)
+                ->exists();
         }
 
-        // 6. ✅ CEK ABSENSI: Hanya untuk materi yang is_attendance_required = true
-        $attendanceMateri = ClassMaterial::where('course_class_id', $class->id)
-            ->whereHas('material', fn($q) => $q->where('is_attendance_required', true))
-            ->get();
+        // Cek essay
+        $essayDone = EssayAssignment::where('material_id', $material->id)
+            ->whereDoesntHave('submissions', function ($q) use ($studentId) {
+                $q->where('student_id', $studentId)->where('is_graded', true);
+            })
+            ->count() == 0;
 
-        // Jika ada materi yang wajib absen, pastikan siswa hadir di SEMUA-nya
-        foreach ($attendanceMateri as $materi) {
-            $hasAttended = Attendance::where('student_id', $studentId)
-                ->where('class_material_id', $materi->id)
-                ->exists();
+        // Cek quiz
+        $quizDone = QuizAssignment::where('material_id', $material->id)
+            ->whereDoesntHave('submissions', function ($q) use ($studentId) {
+                $q->where('student_id', $studentId);
+            })
+            ->count() == 0;
 
-            if (!$hasAttended) {
-                return false;  // Belum hadir di salah satu sesi absen wajib
-            }
-        }
-
-        return true;  // Semua syarat terpenuhi
+        return $essayDone && $quizDone;
     }
 
     public function calculateFinalScore(CourseClass $class, int $studentId): array

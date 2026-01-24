@@ -62,7 +62,7 @@
                         </x-dropdown>
                     </div>
                 @else
-                    <div class="hidden space-x-3 sm:flex">
+                    <div class="hidden space-x-3 items-center sm:flex">
                         <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-[#20C896] dark:text-gray-300">Masuk</a>
                         <a href="{{ route('register') }}" class="rounded-full bg-[#20C896] px-5 py-2 text-sm font-bold text-white shadow-md transition hover:bg-[#1bb386]">Daftar</a>
                     </div>
