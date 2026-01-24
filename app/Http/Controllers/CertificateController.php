@@ -12,29 +12,6 @@ use Illuminate\Support\Str;
 
 class CertificateController extends Controller
 {
-    //  Route download PDF (hanya generate PDF, tanpa session)
-    // public function download(string $classId)
-    // {
-    //     $enrollment = ClassEnrollment::where('class_id', $classId)
-    //         ->where('student_id', Auth::id())
-    //         ->where('status', 'completed')
-    //         ->firstOrFail();
-
-    //     $class = CourseClass::with('course')->findOrFail($classId);
-    //     $student = Auth::user();
-
-    //     $pdf = Pdf::loadView('certificates.default', [
-    //         'student' => $student,
-    //         'course' => $class->course,
-    //         'class' => $class,
-    //         'enrollment' => $enrollment,
-    //     ])->setPaper('A4');
-
-    //     return $pdf->download("Sertifikat_{$class->course->name}.pdf");
-    // }
-
-    // ------------------
-
     public function download(string $classId)
     {
         $enrollment = ClassEnrollment::where('class_id', $classId)

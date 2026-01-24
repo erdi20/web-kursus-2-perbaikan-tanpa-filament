@@ -127,7 +127,7 @@
         </div>
 
         <div class="score-container">
-            dengan Nilai Akhir: <span class="score-box">{{ $enrollment->final_score ?? '0' }}/100</span>
+            dengan Nilai Akhir: <span class="score-box">{{ $enrollment->grade ?? '0' }}/100</span>
         </div>
 
         <div class="web-name-container">

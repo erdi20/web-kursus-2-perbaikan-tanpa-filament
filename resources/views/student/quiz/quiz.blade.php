@@ -75,12 +75,20 @@
                                 @csrf
                                 <div id="quiz-questions" class="space-y-10">
                                     @foreach ($questions as $index => $question)
-                                        <div id="question-{{ $question->id }}" class="question-item ...">
-                                            {{-- ... kode nomor dan teks soal ... --}}
+                                        <div id="question-{{ $question->id }}" class="question-item rounded-xl border border-gray-100 bg-gray-50/50 p-6">
+
+                                            {{-- BAGIAN TEXT SOAL YANG HARUS DITAMBAHKAN --}}
+                                            <div class="mb-4 flex items-start gap-3">
+                                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#20C896] font-bold text-white">
+                                                    {{ $loop->iteration }}
+                                                </span>
+                                                <div class="prose prose-slate max-w-none text-lg font-medium text-gray-800">
+                                                    {!! $question->question_text !!}
+                                                </div>
+                                            </div>
 
                                             <div class="space-y-3">
                                                 @php
-                                                    // 1. Masukkan semua pilihan yang ada ke dalam array
                                                     $options = [];
                                                     if ($question->option_a) {
                                                         $options[] = ['key' => 'A', 'text' => $question->option_a];
@@ -94,18 +102,13 @@
                                                     if ($question->option_d) {
                                                         $options[] = ['key' => 'D', 'text' => $question->option_d];
                                                     }
-
-                                                    // 2. Acak urutan array tersebut
                                                     shuffle($options);
                                                 @endphp
 
                                                 @foreach ($options as $opt)
-                                                    <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition duration-150 hover:bg-indigo-50 peer-checked:border-indigo-500">
-                                                        {{-- Value tetap menggunakan key asli (A, B, C, atau D) agar validasi di Controller tidak berubah --}}
+                                                    <label class="flex cursor-pointer items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition duration-150 hover:bg-indigo-50">
                                                         <input type="radio" name="question_{{ $question->id }}" value="{{ $opt['key'] }}" class="peer mt-1 h-5 w-5 text-indigo-600" required data-question-id="{{ $question->id }}">
-
                                                         <span class="prose font-medium text-gray-700">
-                                                            {{-- Kita tidak menampilkan huruf A/B/C/D di sini agar tidak membingungkan karena sudah diacak --}}
                                                             {!! $opt['text'] !!}
                                                         </span>
                                                     </label>
