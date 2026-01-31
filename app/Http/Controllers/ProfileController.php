@@ -39,7 +39,7 @@ class ProfileController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'birth_date' => ['nullable', 'date'],
-            'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
+            'gender' => ['nullable'],
             'education_level' => ['nullable', 'string', 'max:255'],
         ]);
 
@@ -125,7 +125,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // 1. Validasi Dasar + Field Tambahan (Termasuk Rekening)
+        // 1. Validasi Dasar + Field Tambahan
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
@@ -134,7 +134,7 @@ class ProfileController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'birth_date' => ['nullable', 'date'],
-            'gender' => ['nullable', Rule::in(['male', 'female'])],
+            'gender' => ['nullable', 'string', 'in:male,female'],  // Perjelas validasinya
             'education_level' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:1000'],
         ];
@@ -142,13 +142,13 @@ class ProfileController extends Controller
         // 2. Tambahkan Validasi REKENING khusus jika USER adalah MENTOR
         if ($user->isMentor()) {
             $rules['bank_name'] = ['required', 'string', 'max:100'];
-            $rules['account_number'] = ['required', 'numeric'];
+            $rules['account_number'] = ['required', 'string'];  // Ganti ke string agar nol di depan tidak hilang
             $rules['account_name'] = ['required', 'string', 'max:100'];
         }
 
         $validated = $request->validate($rules);
 
-        // 3. Handle Avatar (Sama seperti logic lo sebelumnya)
+        // 3. Handle Avatar
         if ($request->hasFile('avatar')) {
             if ($user->avatar_url) {
                 Storage::disk('public')->delete($user->avatar_url);
@@ -160,15 +160,16 @@ class ProfileController extends Controller
         }
 
         // 4. Isi data ke Model (Mass Assignment)
+        // Gunakan array_merge atau ambil langsung dari $request jika data nullable tidak muncul di $validated
         $user->fill([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'phone' => $validated['phone'],
-            'address' => $validated['address'],
-            'birth_date' => $validated['birth_date'],
-            'gender' => $validated['gender'],
-            'education_level' => $validated['education_level'],
-            'bio' => $validated['bio'],
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'birth_date' => $request->birth_date,
+            'gender' => $request->gender,  // Ambil langsung dari request untuk menghindari undefined key
+            'education_level' => $request->education_level,
+            'bio' => $request->bio,
         ]);
 
         // 5. Simpan Data Rekening Jika Mentor
@@ -184,7 +185,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        // 6. Redirect dinamis berdasarkan role (agar navbar/layout tidak bentrok)
+        // 6. Redirect dinamis
         $route = $user->isMentor() ? 'mentor.mentoredit' : 'mentoredit';
 
         return Redirect::route($route)->with('status', 'profile-updated');

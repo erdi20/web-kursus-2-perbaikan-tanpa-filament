@@ -69,14 +69,19 @@
                                 <a href="{{ route('mentor.materi.essay.submissions', $essay->id) }}" class="mr-2 text-xs font-bold text-emerald-600 transition hover:underline">Jawaban ({{ $essay->submissions->count() }})</a>
 
                                 <button type="button"
-                                    @click="openEditModal = true;
-                editData = {
-                    url: '{{ route('mentor.materi.essay.update', $essay->id) }}',
-                    title: '{{ addslashes($essay->title) }}',
-                    desc: '{{ addslashes($essay->description) }}',
-                    due: '{{ \Carbon\Carbon::parse($essay->due_date)->format('Y-m-d\TH:i') }}',
-                    published: {{ $essay->is_published ? 'true' : 'false' }}
-                }"
+                                    @click="
+        let rawDesc = '{{ base64_encode($essay->description) }}';
+        let rawTitle = '{{ base64_encode($essay->title) }}';
+
+        openEditModal = true;
+        editData = {
+            url: '{{ route('mentor.materi.essay.update', $essay->id) }}',
+            title: atob(rawTitle),
+            desc: atob(rawDesc),
+            due: '{{ \Carbon\Carbon::parse($essay->due_date)->format('Y-m-d\TH:i') }}',
+            published: {{ $essay->is_published ? 'true' : 'false' }}
+        }
+    "
                                     class="p-2 text-slate-400 transition hover:text-amber-500">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -146,6 +151,7 @@
                                         editQuizData = {
                                             url: '{{ route('mentor.materi.quiz.update', $quiz->id) }}',
                                             title: '{{ addslashes($quiz->title) }}',
+                                            description: '{{ addslashes($quiz->description) }}',
                                             duration: '{{ $quiz->duration_minutes }}',
                                             due: '{{ \Carbon\Carbon::parse($quiz->due_date)->format('Y-m-d\TH:i') }}',
                                             published: {{ $quiz->is_published ? 'true' : 'false' }}
@@ -223,7 +229,7 @@
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-slate-700">Deskripsi / Instruksi</label>
-                        <textarea name="description" x-model="editQuizData.desc" rows="3" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500"></textarea>
+                        <textarea name="description" x-model="editQuizData.description" rows="3" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-blue-500"></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>

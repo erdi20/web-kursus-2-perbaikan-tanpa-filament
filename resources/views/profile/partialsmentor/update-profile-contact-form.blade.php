@@ -18,7 +18,7 @@
             <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
                 <div class="relative">
                     @if ($user->avatar_url)
-                        <img class="h-20 w-20 rounded-full border-4 border-emerald-200 object-cover shadow-md" src="{{ Storage::url($user->avatar_url) }}" alt="Foto Profil">
+                        <img class="h-20 w-20 rounded-full border-4 border-emerald-200 object-cover shadow-md" src="{{ asset(Storage::url($user->avatar_url)) }}" alt="Foto Profil">
                     @else
                         <div class="flex h-20 w-20 items-center justify-center rounded-full border-4 border-emerald-200 bg-emerald-500 shadow-md">
                             <span class="text-3xl font-bold text-white">{{ substr($user->name, 0, 1) }}</span>
@@ -78,7 +78,8 @@
                     <div>
                         <x-input-label for="gender" :value="__('Jenis Kelamin')" />
                         <select id="gender" name="gender" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                            <option value="" disabled {{ is_null(old('gender', $user->gender)) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                            {{-- Gunakan value empty string agar tidak error saat submit --}}
+                            <option value="" {{ is_null(old('gender', $user->gender)) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
                             <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Laki-laki</option>
                             <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Perempuan</option>
                         </select>

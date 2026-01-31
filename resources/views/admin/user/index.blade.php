@@ -9,7 +9,9 @@
             this.isEdit = (mode === 'edit');
             if (this.isEdit && data) {
                 this.user = { ...data };
-                this.actionUrl = `/admin/users/${data.id}`;
+                // PERBAIKAN DI SINI:
+                // Menggunakan template literal dan helper url() agar URL menjadi absolute
+                this.actionUrl = `{{ url('admin/users') }}/${data.id}`;
             } else {
                 this.user = { id: '', name: '', email: '', role: 'student' };
                 this.actionUrl = '{{ route('admin.users.store') }}';

@@ -18,7 +18,7 @@
             <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
                 <div class="relative">
                     @if ($user->avatar_url)
-                        <img class="h-20 w-20 rounded-full border-4 border-emerald-200 object-cover shadow-md" src="{{ Storage::url($user->avatar_url) }}" alt="Foto Profil">
+                        <img class="h-20 w-20 rounded-full border-4 border-emerald-200 object-cover shadow-md" src="{{ asset(Storage::url($user->avatar_url)) }}" alt="Foto Profil">
                     @else
                         <div class="flex h-20 w-20 items-center justify-center rounded-full border-4 border-emerald-200 bg-emerald-500 shadow-md">
                             <span class="text-3xl font-bold text-white">{{ substr($user->name, 0, 1) }}</span>

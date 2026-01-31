@@ -16,6 +16,7 @@ class QuizMentorController extends Controller
         $request->validate([
             'material_id' => 'required',
             'title' => 'required|string|max:255',
+            'description' => 'required|string',  // Tambahkan validasi
             'duration_minutes' => 'required|numeric|min:1',
             'due_date' => 'required|date',
         ]);
@@ -23,13 +24,37 @@ class QuizMentorController extends Controller
         QuizAssignment::create([
             'material_id' => $request->material_id,
             'title' => $request->title,
+            'description' => $request->description,  // WAJIB DITAMBAHKAN
             'duration_minutes' => $request->duration_minutes,
             'due_date' => $request->due_date,
             'created_by' => Auth::id(),
             'is_published' => true,
         ]);
 
-        return back()->with('success', 'Quiz berhasil dibuat! Sekarang tambahkan soal.');
+        return back()->with('success', 'Quiz berhasil dibuat!');
+    }
+
+    public function updateQuiz(Request $request, $id)
+    {
+        $quiz = QuizAssignment::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'due_date' => 'required|date',
+        ]);
+
+        $quiz->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'duration_minutes' => $request->duration_minutes,
+            'due_date' => \Carbon\Carbon::parse($request->due_date),
+            // Gunakan boolean check untuk is_published
+            'is_published' => $request->has('is_published') || $request->is_published == 'true',
+        ]);
+
+        return back()->with('success', 'Pengaturan Quiz berhasil diperbarui!');
     }
 
     public function storeQuestion(Request $request)
@@ -48,28 +73,6 @@ class QuizMentorController extends Controller
         QuizQuestion::create($request->all());
 
         return back()->with('success', 'Soal berhasil ditambahkan!');
-    }
-
-    public function updateQuiz(Request $request, $id)
-    {
-        $quiz = QuizAssignment::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'due_date' => 'required|date',
-        ]);
-
-        $quiz->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'duration_minutes' => $request->duration_minutes,
-            'due_date' => \Carbon\Carbon::parse($request->due_date, 'Asia/Jakarta')->setTimezone('UTC'),
-            'is_published' => $request->has('is_published'),
-        ]);
-
-        return back()->with('success', 'Pengaturan Quiz berhasil diperbarui!');
     }
 
     public function manageQuestions($id)

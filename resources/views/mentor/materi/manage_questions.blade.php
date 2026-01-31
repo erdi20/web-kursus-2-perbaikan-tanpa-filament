@@ -208,7 +208,9 @@
         function openEditModal(q) {
             modalTitle.innerText = "Edit Pertanyaan";
             // Gunakan URL yang dinamis sesuai route update soal lo
-            form.action = `/mentor/quiz/question/${q.id}`;
+            let url = "{{ route('mentor.materi.quiz.question.update', ':id') }}";
+            form.action = url.replace(':id', q.id);
+
             methodField.innerHTML = `@method('PUT')`;
 
             // Isi field text

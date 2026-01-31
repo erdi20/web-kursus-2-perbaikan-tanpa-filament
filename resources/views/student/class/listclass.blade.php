@@ -14,7 +14,8 @@
                             <!-- Gambar Course (jika ada) -->
                             @if ($class->thumbnail)
                                 <div class="h-32 overflow-hidden">
-                                    <img src="{{ $class->thumbnail_url }}" alt="Kelas {{ $class->name }}" class="h-full w-full object-cover">
+
+                                    <img src="{{ app()->environment('local') ? asset('storage/' . $class->thumbnail) : asset('storage/app/public/' . $class->thumbnail) }}" alt="Kelas {{ $class->name }}" class="h-full w-full object-cover">
                                 </div>
                             @else
                                 <div class="h-32 bg-gradient-to-r from-indigo-400 to-purple-500"></div>

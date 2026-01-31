@@ -76,7 +76,7 @@
             </div>
         </div>
 
-      
+
         <div x-show="openModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
             {{-- Backdrop --}}
             <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-[2px] transition-opacity" @click="openModal = false"></div>
@@ -248,6 +248,7 @@
 
     </div>
     {{-- modal detail siswa --}}
+    {{-- modal detail siswa --}}
     <div x-data="{
         showDetail: false,
         isLoading: false,
@@ -267,8 +268,10 @@
             this.showDetail = true;
             this.isLoading = true;
 
-            // Kita susun URL secara manual agar tidak merusak sintaks Alpine
-            let url = '/mentor/enrollment/' + id + '/detail';
+            // MENGGUNAKAN LINK DINAMIS:
+            // Kita ambil pattern route dari Laravel, lalu replace placeholder ID-nya dengan JavaScript
+            let urlPattern = '{{ route('mentor.enrollment.detail', ':id') }}';
+            let url = urlPattern.replace(':id', id);
 
             try {
                 let response = await fetch(url, {
@@ -285,7 +288,6 @@
                 const result = await response.json();
                 this.data = result;
 
-                console.log('Data sukses dimuat:', this.data);
             } catch (error) {
                 console.error('Detail Error:', error);
                 alert('Waduh, ada masalah: ' + error.message);

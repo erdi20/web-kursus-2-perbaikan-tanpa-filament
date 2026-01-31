@@ -13,7 +13,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-bold tracking-tight text-slate-950">{{ $quiz->title }}</h2>
-                    <p class="text-sm text-slate-500">Materi: <span class="font-bold text-slate-700">{{ $quiz->material->name ?? $quiz->material->title }}</span></p>
+                    <p class="text-sm text-slate-500">Materi: <span class="font-bold text-slate-700">{{ $quiz->material->name ?? $quiz->material->title ?? 'Tidak Ada Nama' }}</span></p>
                 </div>
                 <div class="flex gap-6 text-right">
                     <div>
@@ -41,23 +41,25 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
+                    @php
+                        // PINDAHKAN LOGIC SKM KE SINI AGAR TERDEFINISI SEBELUM LOOPING
+                        $minScore = $quiz->material->classMaterials->first()->courseClass->min_final_score ?? 70;
+                    @endphp
+
                     @forelse($submissions as $sub)
                         <tr class="transition hover:bg-slate-50/50">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
-                                        {{ substr($sub->student->name, 0, 2) }}
+                                        {{ substr($sub->student->name ?? '??', 0, 2) }}
                                     </div>
                                     <div>
-                                        <p class="font-semibold leading-none text-slate-700">{{ $sub->student->name }}</p>
-                                        <p class="mt-1 text-[10px] text-slate-400">{{ $sub->student->email }}</p>
+                                        <p class="font-semibold leading-none text-slate-700">{{ $sub->student->name ?? 'Mahasiswa' }}</p>
+                                        <p class="mt-1 text-[10px] text-slate-400">{{ $sub->student->email ?? '-' }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @php
-                                    $minScore = $quiz->material->classMaterials->first()->courseClass->min_final_score ?? 70;
-                                @endphp
                                 <span class="{{ $sub->score >= $minScore ? 'text-emerald-600' : 'text-red-500' }} text-base font-black">
                                     {{ round($sub->score) }}
                                 </span>
@@ -72,7 +74,6 @@
                                 <p class="text-[10px] text-slate-400">{{ $sub->created_at->format('H:i') }} WIB</p>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                {{-- Karena detail jawaban dilewati, kita kasih status saja --}}
                                 <span class="text-[10px] font-bold uppercase italic text-slate-400">Otomatis</span>
                             </td>
                         </tr>
