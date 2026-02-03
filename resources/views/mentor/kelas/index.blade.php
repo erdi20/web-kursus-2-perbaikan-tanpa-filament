@@ -22,12 +22,18 @@
         openEdit(item, url) {
             this.editMode = true;
             this.actionUrl = url;
+
+            // PERBAIKAN: Hitung variabel di LUAR objek formData
+            let start = item.enrollment_start ? item.enrollment_start.replace(' ', 'T').substring(0, 16) : '';
+            let end = item.enrollment_end ? item.enrollment_end.replace(' ', 'T').substring(0, 16) : '';
+
+            // Masukkan variabel yang sudah dihitung ke dalam objek
             this.formData = {
                 name: item.name,
                 description: item.description || '',
                 max_quota: item.max_quota,
-                enrollment_start: item.enrollment_start.split(' ')[0],
-                enrollment_end: item.enrollment_end.split(' ')[0],
+                enrollment_start: start,
+                enrollment_end: end,
                 status: item.status
             };
             this.openModal = true;
@@ -147,12 +153,12 @@
 
                         <div>
                             <label class="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Pendaftaran Mulai</label>
-                            <input type="date" name="enrollment_start" x-model="formData.enrollment_start" required class="w-full rounded-xl border-slate-200 bg-slate-50 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <input type="datetime-local" name="enrollment_start" x-model="formData.enrollment_start" required class="w-full rounded-xl border-slate-200 bg-slate-50 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         </div>
 
                         <div>
                             <label class="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-400">Pendaftaran Berakhir</label>
-                            <input type="date" name="enrollment_end" x-model="formData.enrollment_end" required class="w-full rounded-xl border-slate-200 bg-slate-50 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <input type="datetime-local" name="enrollment_end" x-model="formData.enrollment_end" required class="w-full rounded-xl border-slate-200 bg-slate-50 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                         </div>
 
                         <div class="col-span-2">

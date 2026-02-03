@@ -1,42 +1,67 @@
 <x-app-layout>
     <div class="mx-auto max-w-[1280px] px-4 py-10" role="main">
 
-        @if ($sliders->count())
-            <section class="group relative mb-20 overflow-hidden rounded-[2rem] shadow-2xl">
-                <div id="slide-container" class="relative h-[400px] md:h-[600px]">
-                    @foreach ($sliders as $index => $slider)
-                        <div class="{{ $loop->first ? 'opacity-100 scale-100' : 'opacity-0 scale-105' }} absolute inset-0 h-full w-full transform transition-all duration-1000 ease-in-out" id="slide-{{ $index }}">
-                            <img src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->title }}" class="h-full w-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+      @if ($sliders->count())
+    <section class="group relative mb-10 overflow-hidden rounded-[2.5rem] shadow-lg ring-1 ring-slate-900/5 mx-auto max-w-6xl">
+        {{-- Container: Tinggi dibuat sangat compact (Mobile: 380px, Laptop: 320px) --}}
+        {{-- Ini membuatnya terlihat seperti "Banner" modern, bukan layar penuh --}}
+        <div id="slide-container" class="relative h-[380px] md:h-[320px]">
+            @foreach ($sliders as $index => $slider)
+                <div class="{{ $loop->first ? 'opacity-100 z-10' : 'opacity-0 z-0' }} absolute inset-0 h-full w-full transition-all duration-700 ease-in-out" id="slide-{{ $index }}">
 
-                            <div class="absolute inset-0 flex flex-col justify-end p-8 text-white md:p-20">
-                                <div class="max-w-3xl translate-y-0 transform transition-all duration-700">
-                                    <span class="mb-4 inline-block rounded-full bg-green-500 px-4 py-1 text-xs font-bold uppercase tracking-widest text-white">Special Promo</span>
-                                    <h2 class="mb-4 text-4xl font-black leading-tight md:text-6xl">{{ $slider->title }}</h2>
-                                    <p class="mb-8 line-clamp-2 hidden max-w-xl text-lg text-gray-200 md:block">{{ $slider->description }}</p>
-                                    <div class="flex gap-4">
-                                        <a href="{{ route('listkursus') }}" class="inline-block rounded-xl bg-green-500 px-8 py-4 font-bold text-white shadow-lg transition hover:bg-green-600 active:scale-95">Jelajahi Kursus</a>
-                                    </div>
-                                </div>
+                    {{-- Gambar --}}
+                    <img src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->title }}"
+                         class="h-full w-full object-cover object-center transition-transform duration-[3000ms] ease-out group-hover:scale-105">
+
+                    {{-- Gradient: Lebih gelap agar teks putih kecil tetap terbaca jelas --}}
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/50 to-transparent"></div>
+
+                    {{-- Konten: Layout Horizontal (Kiri: Teks, Kanan: Kosong/Gambar) --}}
+                    <div class="absolute inset-0 flex items-center px-8 md:px-12">
+                        <div class="max-w-lg translate-y-0 space-y-3">
+
+                            {{-- Badge Kecil --}}
+                            <div class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-green-300 backdrop-blur-md">
+                                <span class="h-1.5 w-1.5 rounded-full bg-green-400"></span>
+                                Promo
+                            </div>
+
+                            {{-- Judul: Ukuran Font disesuaikan (3xl di desktop) agar tidak "sumpek" --}}
+                            <h2 class="text-2xl font-black leading-tight text-white md:text-3xl lg:text-4xl">
+                                {{ $slider->title }}
+                            </h2>
+
+                            {{-- Deskripsi: Disederhanakan jadi 1-2 baris saja --}}
+                            <p class="line-clamp-2 text-xs font-medium leading-relaxed text-slate-300 md:text-sm">
+                                {{ $slider->description }}
+                            </p>
+
+                            {{-- Tombol: Versi Compact --}}
+                            <div class="pt-2">
+                                <a href="{{ route('listkursus') }}" class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold text-slate-900 transition-transform hover:scale-105 hover:bg-green-50">
+                                    Cek Sekarang
+                                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
-                    @endforeach
+                    </div>
                 </div>
+            @endforeach
+        </div>
 
-                <div class="absolute bottom-10 right-10 z-30 flex gap-3">
-                    <button id="prev-btn" class="rounded-xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md transition hover:bg-white/20">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button id="next-btn" class="rounded-xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-md transition hover:bg-white/20">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </section>
-        @endif
+        {{-- Navigasi: Minimalis di pojok kanan bawah --}}
+        <div class="absolute bottom-4 right-4 z-20 flex gap-2">
+            <button id="prev-btn" class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-md transition hover:bg-white hover:text-black">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button id="next-btn" class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-md transition hover:bg-white hover:text-black">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+        </div>
+    </section>
+@endif
 
         {{-- hero --}}
         <section class="mb-24 grid grid-cols-1 items-center gap-16 lg:grid-cols-2">

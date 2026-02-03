@@ -41,7 +41,9 @@
                     </div>
                     <div>
                         <p class="text-sm font-bold text-rose-800">Tugas Belum Selesai!</p>
-                        <p class="text-xs text-rose-600">Selesaikan {{ $incompleteTasks }} tugas untuk lanjut ke materi berikutnya.</p>
+                        <p class="mt-0.5 text-xs text-rose-600">
+                            Harap selesaikan {{ $incompleteTasks }} tugas di atas agar materi ini dinyatakan <b>Tuntas</b>.
+                        </p>
                     </div>
                 </div>
             @endif

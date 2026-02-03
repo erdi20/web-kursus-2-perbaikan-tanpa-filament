@@ -4,17 +4,16 @@ Sistem pembelajaran online berbasis Laravel dengan fitur lengkap:
 ✅ Pendaftaran kelas & pembayaran (Midtrans)  
 ✅ Materi berurutan & tugas (Essay/Quiz)  
 ✅ Absensi berbasis foto  
-✅ Penilaian otomatis & sertifikat PDF  
-✅ Admin panel (Filament)
+✅ Penilaian otomatis & sertifikat PDF
 
 ---
 
 ## 🛠️ Prasyarat
 
--   PHP >= 8.2
--   Composer
--   MySQL / PostgreSQL
--   Node.js & NPM
+- PHP >= 8.2
+- Composer
+- MySQL / PostgreSQL
+- Node.js & NPM
 
 ---
 
@@ -23,7 +22,7 @@ Sistem pembelajaran online berbasis Laravel dengan fitur lengkap:
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/erdi20/capstone-project-web-kursus.git
+git clone https://github.com/erdi20/web-kursus-2-perbaikan-tanpa-filament.git
 cd capstone-project-web-kursus
 ```
 
@@ -101,23 +100,22 @@ php artisan storage:link
 php artisan serve
 ```
 
-
 Akses:
 
--   **Frontend**: [http://localhost:8000]
--   **Admin (Filament)**: [http://localhost:8000/app]
+- **Frontend**: [http://localhost:8000]
 
 ---
 
 ---
+
 untuk menggunakan fitur payment gateway dengan midtrans
 lakukan beberapa langkah
-1. jalankan ngrok perintah 
-ngrok http 8000
+
+1. jalankan ngrok perintah
+   ngrok http 8000
 
 2. salin urlnya lalu gabungkan dengan route api. letakan di midtrans->pengaturan->payment->URL notifikasi->Endpoint URL notifikasi-> simpan
-http://...../payment/notify
-
+   http://...../payment/notify
 
 ---
 
@@ -137,29 +135,29 @@ http://...../payment/notify
 
 ### 🧑‍🎓 Sisi Siswa
 
--   Daftar kelas & bayar via Midtrans
--   Akses materi berurutan (harus selesaikan prasyarat)
--   Kerjakan tugas Essay & Quiz
--   Absensi berbasis foto saat sesi Zoom
--   Lihat nilai & unduh sertifikat PDF
+- Daftar kelas & bayar via Midtrans
+- Akses materi berurutan (harus selesaikan prasyarat)
+- Kerjakan tugas Essay & Quiz
+- Absensi berbasis foto saat sesi Zoom
+- Lihat nilai & unduh sertifikat PDF
 
-### 👨‍🏫 Sisi Mentor (Filament)
+### 👨‍🏫 Sisi Mentor
 
--   Kelola kursus, kelas, materi
--   Buat tugas Essay & Quiz
--   Atur jadwal absensi
--   Pantau progres & nilai siswa
--   Generate sertifikat otomatis
+- Kelola kursus, kelas, materi
+- Buat tugas Essay & Quiz
+- Atur jadwal absensi
+- Pantau progres & nilai siswa
+- Generate sertifikat otomatis
 
 ### 💳 Pembayaran
 
--   Integrasi Midtrans (Sandbox/Production)
--   Callback otomatis untuk update status
+- Integrasi Midtrans (Sandbox/Production)
+- Callback otomatis untuk update status
 
 ### 📄 Sertifikat
 
--   Generate PDF on-the-fly
--   Template bisa dikustom per kursus
+- Generate PDF on-the-fly
+- Template bisa dikustom per kursus
 
 ---
 
@@ -188,4 +186,3 @@ Jika menemui masalah:
 > Kontribusi & saran sangat diterima.
 
 ---
-

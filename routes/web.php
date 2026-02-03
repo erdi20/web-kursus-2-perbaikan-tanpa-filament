@@ -34,7 +34,7 @@ Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('contact.us');
 // web.php
 Route::get('/listkursus', [CourseController::class, 'index'])->name('listkursus');
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'student')->group(function () {
     Route::get('/payment', function () {
         return view('student.payment');
     });
